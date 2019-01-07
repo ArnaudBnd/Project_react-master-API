@@ -1,0 +1,36 @@
+{
+  "name": "project_react-master-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
+    "start": "npm run build && node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArnaudBnd/Project_react-master-API.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ArnaudBnd/Project_react-master-API/issues"
+  },
+  "homepage": "https://github.com/ArnaudBnd/Project_react-master-API#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "bookshelf": "^0.14.2",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.4.0",
+    "knex": "^0.16.3",
+    "nodemailer": "^5.0.0",
+    "pg": "^7.7.1",
+    "validator": "^10.10.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "rimraf": "^2.6.3"
+  }
+}
