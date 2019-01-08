@@ -7,6 +7,7 @@ import bcrypt from 'bcryptjs'
 let router = express.Router()
 
 router.post('/', (req, res) => {
+  console.log('here')
   User.query({
     where: { resetPasswordToken: req.body.token }
   }).fetch().then(user => {

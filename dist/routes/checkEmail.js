@@ -61,7 +61,7 @@ router.post('/', function (req, res) {
         from: 'projetreactemail@gmail.fr',
         to: 'arnaudbenede@hotmail.fr',
         subject: 'TEST PASSWORD',
-        html: '<p>Veullez cliquer sur le lien ci-dessus pour changer votre adresse mail</p>' + ('http://localhost:3000/reset/' + token)
+        html: '<p>Veullez cliquer sur le lien ci-dessus pour changer votre adresse mail</p>' + ('http://localhost:3006/reset/' + token)
       };
 
       transporter.sendMail(mailOptions, function (err, response) {

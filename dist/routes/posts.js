@@ -50,18 +50,6 @@ router.get('/', function (req, res) {
   });
 });
 
-router.get('/:idUserPost', function (req, res) {
-  _post2.default.query({
-    innerJoin: ['users', 'idUser', 'users.id'],
-    select: ['users.username', 'title', 'content', 'posts.created_at', 'posts.id'],
-    where: { idUser: req.params.idUserPost }
-  }).orderBy('posts.created_at', 'desc').fetch().then(function (post) {
-    res.json({ post: post });
-  }).catch(function (err) {
-    return res.status(500).json({ error: err });
-  });
-});
-
 router.delete('/:id', function (req, res) {
   _post2.default.query({
     where: { id: req.params.id }

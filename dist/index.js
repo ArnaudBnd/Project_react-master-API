@@ -49,7 +49,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var app = (0, _express2.default)();
 
 app.use(_bodyParser2.default.json());
-
+// Permet de faire des requêtes sur differentes urls
 app.use((0, _cors2.default)());
 
 // Fct exécuté pour tout type de demande http sur le chemin /api/users & /api/auth

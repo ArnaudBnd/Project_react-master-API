@@ -29,6 +29,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var router = _express2.default.Router();
 
 router.post('/', function (req, res) {
+  console.log('here');
   _user2.default.query({
     where: { resetPasswordToken: req.body.token }
   }).fetch().then(function (user) {

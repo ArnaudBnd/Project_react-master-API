@@ -13,7 +13,7 @@ import cors from 'cors'
 let app = express();
 
 app.use(bodyParser.json());
-
+// Permet de faire des requêtes sur differentes urls
 app.use(cors());
 
 // Fct exécuté pour tout type de demande http sur le chemin /api/users & /api/auth

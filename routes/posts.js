@@ -30,17 +30,6 @@ router.get('/', (req, res) => {
   .catch(err => res.status(500).json({ error: err }))
 })
 
-router.get('/:idUserPost', (req, res) => {
-  Post.query({
-    innerJoin: [ 'users', 'idUser', 'users.id' ],
-    select: [ 'users.username', 'title', 'content', 'posts.created_at', 'posts.id' ],
-    where: { idUser: req.params.idUserPost }
-  }).orderBy('posts.created_at', 'desc').fetch().then(post => {
-    res.json({ post })
-  })
-  .catch(err => res.status(500).json({ error: err }))
-})
-
 router.delete('/:id', (req, res) => {
   Post.query({
     where: { id: req.params.id }

@@ -41,7 +41,7 @@ router.post('/', (req, res) => {
         to: 'arnaudbenede@hotmail.fr',
         subject: 'TEST PASSWORD',
         html: '<p>Veullez cliquer sur le lien ci-dessus pour changer votre adresse mail</p>'
-        + `http://localhost:3000/reset/${token}`
+        + `http://localhost:3006/reset/${token}`
       }
 
       transporter.sendMail(mailOptions, (err, response) => {

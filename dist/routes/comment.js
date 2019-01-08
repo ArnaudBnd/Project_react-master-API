@@ -66,6 +66,7 @@ router.get('/:username', function (req, res) {
 });
 
 router.post('/update', function (req, res) {
+  console.log('req.body: ', req.body);
   _comment2.default.where({
     id: req.body.idCommentToUpdate
   }).save({
