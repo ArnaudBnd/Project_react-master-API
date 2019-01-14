@@ -30,6 +30,25 @@ router.get('/', (req, res) => {
   .catch(err => res.status(500).json({ error: err }))
 })
 
+router.get('/allPost', (req, res) => {
+  Post.query({
+    innerJoin: [ 'users', 'idUser', 'users.id' ],
+    select: [ 'users.username', 'title', 'content', 'posts.created_at', 'posts.id', 'idCategorie' ]
+  }).fetchAll().then(post => {
+    console.log('all post from server', post)
+    res.json({ post })
+  })
+  .catch(err => res.status(500).json({ error: err }))
+})
+
+router.get('/:id', (req, res) => {
+  Post.query({
+    where: { idUser: req.params.id }
+  }).fetchAll().then(posts => {
+    res.json({ posts })
+  })
+})
+
 router.delete('/:id', (req, res) => {
   Post.query({
     where: { id: req.params.id }
