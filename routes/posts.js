@@ -35,7 +35,6 @@ router.get('/allPost', (req, res) => {
     innerJoin: [ 'users', 'idUser', 'users.id' ],
     select: [ 'users.username', 'title', 'content', 'posts.created_at', 'posts.id', 'idCategorie' ]
   }).fetchAll().then(post => {
-    console.log('all post from server', post)
     res.json({ post })
   })
   .catch(err => res.status(500).json({ error: err }))
