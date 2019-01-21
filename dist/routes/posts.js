@@ -55,7 +55,6 @@ router.get('/allPost', function (req, res) {
     innerJoin: ['users', 'idUser', 'users.id'],
     select: ['users.username', 'title', 'content', 'posts.created_at', 'posts.id', 'idCategorie']
   }).fetchAll().then(function (post) {
-    console.log('all post from server', post);
     res.json({ post: post });
   }).catch(function (err) {
     return res.status(500).json({ error: err });
@@ -65,6 +64,16 @@ router.get('/allPost', function (req, res) {
 router.get('/:id', function (req, res) {
   _post2.default.query({
     where: { idUser: req.params.id }
+  }).fetchAll().then(function (posts) {
+    res.json({ posts: posts });
+  });
+});
+
+router.get('/display/:idPost', function (req, res) {
+  _post2.default.query({
+    innerJoin: ['users', 'idUser', 'users.id'],
+    select: ['users.username', 'title', 'content', 'posts.created_at', 'posts.id', 'idCategorie'],
+    where: { 'posts.id': req.params.idPost }
   }).fetchAll().then(function (posts) {
     res.json({ posts: posts });
   });

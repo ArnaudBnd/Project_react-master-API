@@ -48,6 +48,16 @@ router.get('/:id', (req, res) => {
   })
 })
 
+router.get('/display/:idPost', (req, res) => {
+  Post.query({
+    innerJoin: [ 'users', 'idUser', 'users.id' ],
+    select: [ 'users.username', 'title', 'content', 'posts.created_at', 'posts.id', 'idCategorie' ],
+    where: { 'posts.id': req.params.idPost }
+  }).fetchAll().then(posts => {
+    res.json({ posts })
+  })
+})
+
 router.delete('/:id', (req, res) => {
   Post.query({
     where: { id: req.params.id }

@@ -39,6 +39,14 @@ router.get('/', (req, res) => {
 router.get('/:username', (req, res) => {
   Comment.query({
     where: { user: req.params.username }
+  }).fetchAll().then(comment => {
+    res.json({ comment })
+  })
+})
+
+router.get('/display/:idPost', (req, res) => {
+  Comment.query({
+    where: { idPost: req.params.idPost }
   }).fetchAll().then(comments => {
     res.json({ comments })
   })

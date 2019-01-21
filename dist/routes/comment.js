@@ -60,6 +60,14 @@ router.get('/', function (req, res) {
 router.get('/:username', function (req, res) {
   _comment2.default.query({
     where: { user: req.params.username }
+  }).fetchAll().then(function (comment) {
+    res.json({ comment: comment });
+  });
+});
+
+router.get('/display/:idPost', function (req, res) {
+  _comment2.default.query({
+    where: { idPost: req.params.idPost }
   }).fetchAll().then(function (comments) {
     res.json({ comments: comments });
   });
