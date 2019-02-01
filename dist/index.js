@@ -20,6 +20,10 @@ var _reset = require('./routes/reset');
 
 var _reset2 = _interopRequireDefault(_reset);
 
+var _sendEmail = require('./routes/sendEmail');
+
+var _sendEmail2 = _interopRequireDefault(_sendEmail);
+
 var _auth = require('./routes/auth');
 
 var _auth2 = _interopRequireDefault(_auth);
@@ -60,6 +64,7 @@ app.use('/api/comments', _comment2.default);
 app.use('/api/profils', _profils2.default);
 app.use('/api/checkEmail', _checkEmail2.default);
 app.use('/api/reset', _reset2.default);
+app.use('/api/send', _sendEmail2.default);
 
 app.get('/*', function (req, res) {
   res.sendFile(_path2.default.join(__dirname, './index.html'));

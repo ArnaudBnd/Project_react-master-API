@@ -3,6 +3,7 @@ import path from 'path';
 import users from './routes/users';
 import checkEmail from './routes/checkEmail';
 import reset from './routes/reset';
+import sendEmail from './routes/sendEmail';
 import auth from './routes/auth';
 import posts from './routes/posts';
 import comments from './routes/comment';
@@ -24,6 +25,7 @@ app.use('/api/comments', comments);
 app.use('/api/profils', profils);
 app.use('/api/checkEmail', checkEmail);
 app.use('/api/reset', reset);
+app.use('/api/send', sendEmail);
 
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, './index.html'));
