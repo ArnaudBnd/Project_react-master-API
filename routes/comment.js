@@ -31,7 +31,7 @@ router.post('/', (req, res) => {
 router.get('/', (req, res) => {
   Comment.query({
     select: [ 'user', 'comment', 'idPost', 'date', 'id' ]
-  }).fetchAll().then(comments => {
+  }).orderBy('date', 'asc').fetchAll().then(comments => {
     res.json({ comments })
   })
 })
@@ -47,7 +47,7 @@ router.get('/:username', (req, res) => {
 router.get('/display/:idPost', (req, res) => {
   Comment.query({
     where: { idPost: req.params.idPost }
-  }).fetchAll().then(comments => {
+  }).orderBy('date', 'asc').fetchAll().then(comments => {
     res.json({ comments })
   })
 })

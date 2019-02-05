@@ -52,7 +52,7 @@ router.post('/', function (req, res) {
 router.get('/', function (req, res) {
   _comment2.default.query({
     select: ['user', 'comment', 'idPost', 'date', 'id']
-  }).fetchAll().then(function (comments) {
+  }).orderBy('date', 'asc').fetchAll().then(function (comments) {
     res.json({ comments: comments });
   });
 });
@@ -68,7 +68,7 @@ router.get('/:username', function (req, res) {
 router.get('/display/:idPost', function (req, res) {
   _comment2.default.query({
     where: { idPost: req.params.idPost }
-  }).fetchAll().then(function (comments) {
+  }).orderBy('date', 'asc').fetchAll().then(function (comments) {
     res.json({ comments: comments });
   });
 });

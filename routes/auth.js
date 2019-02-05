@@ -7,6 +7,20 @@ import User from '../models/user'
 
 let router = express.Router()
 
+/*
+ * To supress space
+ * @params name
+ * @return newName String
+ */
+function supressSpaceName(name) {
+  let username, lastNameModif
+
+  if (name.indexOf(' ') >= 0) {
+    username = name.split(' ').join('_').toLowerCase()
+  }
+  return username
+}
+
 router.post('/', (req, res) => {
   const { identifier, password } = req.body
 
@@ -30,6 +44,32 @@ router.post('/', (req, res) => {
       res.status(401).json({ errors: { form: 'Invalid Credentials' } })
     }
   })
+})
+
+router.post('/facebookLogin', (req, res) => {
+  const { name, email } = req.body
+  const username = supressSpaceName(name)
+  const password_digest = ''
+
+  console.log('username: ', username)
+  console.log('email: ', email)
+
+  // je le connect
+  // sinon en dessous je crée
+
+  User.forge({
+    username, email, password_digest
+  }, { hasTimestamps: true }).save()
+    .then(user => {
+      // renvoyer un objet avec id, username, iat, exp
+      res.json({ success: true })
+    }).catch(err => {
+      if (err.detail) {
+        // renvoyer un objet avec id, username, iat, exp
+        res.json({ success: true })
+      }
+    })
+
 })
 
 export default router

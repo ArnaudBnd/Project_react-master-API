@@ -28,6 +28,21 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var router = _express2.default.Router();
 
+/*
+ * To supress space
+ * @params name
+ * @return newName String
+ */
+function supressSpaceName(name) {
+  var username = void 0,
+      lastNameModif = void 0;
+
+  if (name.indexOf(' ') >= 0) {
+    username = name.split(' ').join('_').toLowerCase();
+  }
+  return username;
+}
+
 router.post('/', function (req, res) {
   var _req$body = req.body,
       identifier = _req$body.identifier,
@@ -52,6 +67,33 @@ router.post('/', function (req, res) {
       }
     } else {
       res.status(401).json({ errors: { form: 'Invalid Credentials' } });
+    }
+  });
+});
+
+router.post('/facebookLogin', function (req, res) {
+  var _req$body2 = req.body,
+      name = _req$body2.name,
+      email = _req$body2.email;
+
+  var username = supressSpaceName(name);
+  var password_digest = '';
+
+  console.log('username: ', username);
+  console.log('email: ', email);
+
+  // je le connect
+  // sinon en dessous je crée
+
+  _user2.default.forge({
+    username: username, email: email, password_digest: password_digest
+  }, { hasTimestamps: true }).save().then(function (user) {
+    // renvoyer un objet avec id, username, iat, exp
+    res.json({ success: true });
+  }).catch(function (err) {
+    if (err.detail) {
+      // renvoyer un objet avec id, username, iat, exp
+      res.json({ success: true });
     }
   });
 });
