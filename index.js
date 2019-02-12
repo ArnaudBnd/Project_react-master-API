@@ -4,6 +4,7 @@ import users from './routes/users';
 import checkEmail from './routes/checkEmail';
 import reset from './routes/reset';
 import sendEmail from './routes/sendEmail';
+import likes from './routes/likes';
 import auth from './routes/auth';
 import posts from './routes/posts';
 import comments from './routes/comment';
@@ -26,6 +27,7 @@ app.use('/api/profils', profils);
 app.use('/api/checkEmail', checkEmail);
 app.use('/api/reset', reset);
 app.use('/api/send', sendEmail);
+app.use('/api/likes', likes);
 
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, './index.html'));
