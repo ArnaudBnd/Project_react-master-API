@@ -32,7 +32,7 @@ router.get('/:identifier', function (req, res) {
   _user2.default.query({
     select: ['username', 'email', 'password_digest', 'id'],
     where: { id: req.params.identifier }
-  }).fetch().then(function (user) {
+  }).fetchAll().then(function (user) {
     res.json({ user: user });
   });
 });

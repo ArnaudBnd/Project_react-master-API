@@ -10,7 +10,7 @@ router.get('/:identifier', (req, res) => {
   User.query({
     select: [ 'username', 'email', 'password_digest', 'id' ],
     where: { id: req.params.identifier }
-  }).fetch().then(user => {
+  }).fetchAll().then(user => {
     res.json({ user })
   })
 })

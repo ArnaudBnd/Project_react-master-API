@@ -21,4 +21,22 @@ router.post('/', (req, res) => {
   })
 })
 
+router.get('/', (req, res) => {
+  Like.query({
+    select: [ 'id', 'idElementLiked', 'user' ]
+  }).fetchAll().then(likes => {
+    res.json({ likes })
+  })
+})
+
+router.delete('/deleted', (req, res) => {
+  const { idElementLiked, user } = req.query
+
+  Like.query({
+    where: { idElementLiked, user }
+  }).destroy().then(like => {
+    res.json({ like })
+  })
+})
+
 export default router
