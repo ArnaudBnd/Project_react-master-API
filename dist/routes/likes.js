@@ -24,8 +24,8 @@ router.post('/', function (req, res) {
 
   _likes2.default.query({
     where: { idElementLiked: idElementLiked, user: user }
-  }).fetchAll().then(function (res) {
-    if (res.length === 0) {
+  }).fetchAll().then(function (response) {
+    if (response.length === 0) {
       _likes2.default.forge({
         idElementLiked: idElementLiked,
         user: user

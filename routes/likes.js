@@ -8,8 +8,8 @@ router.post('/', (req, res) => {
 
   Like.query({
     where: { idElementLiked, user }
-  }).fetchAll().then(res => {
-    if (res.length === 0) {
+  }).fetchAll().then(response => {
+    if (response.length === 0) {
       Like.forge({
         idElementLiked,
         user
