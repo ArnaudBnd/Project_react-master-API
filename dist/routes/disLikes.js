@@ -18,17 +18,19 @@ var router = _express2.default.Router();
 
 router.post('/', function (req, res) {
   var _req$body = req.body,
-      idElementDisliked = _req$body.idElementDisliked,
-      user = _req$body.user;
+      id_element = _req$body.id_element,
+      id_user = _req$body.id_user;
 
+  var element = 'post';
 
   _disLikes2.default.query({
-    where: { idElementDisliked: idElementDisliked, user: user }
+    where: { id_element: id_element, id_user: id_user }
   }).fetchAll().then(function (response) {
     if (response.length === 0) {
       _disLikes2.default.forge({
-        idElementDisliked: idElementDisliked,
-        user: user
+        id_element: id_element,
+        id_user: id_user,
+        element: element
       }).save().then(function () {
         return res.json({ success: true });
       });
@@ -40,7 +42,7 @@ router.post('/', function (req, res) {
 
 router.get('/', function (req, res) {
   _disLikes2.default.query({
-    select: ['id', 'idElementDisliked', 'user']
+    select: ['id', 'id_element', 'id_user']
   }).fetchAll().then(function (disLikes) {
     res.json({ disLikes: disLikes });
   });
@@ -48,12 +50,12 @@ router.get('/', function (req, res) {
 
 router.delete('/deleted', function (req, res) {
   var _req$query = req.query,
-      idElementDisliked = _req$query.idElementDisliked,
-      user = _req$query.user;
+      id_element = _req$query.id_element,
+      id_user = _req$query.id_user;
 
 
   _disLikes2.default.query({
-    where: { idElementDisliked: idElementDisliked, user: user }
+    where: { id_element: id_element, id_user: id_user }
   }).destroy().then(function (disLike) {
     res.json({ disLike: disLike });
   });

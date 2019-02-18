@@ -18,17 +18,19 @@ var router = _express2.default.Router();
 
 router.post('/', function (req, res) {
   var _req$body = req.body,
-      idElementLiked = _req$body.idElementLiked,
-      user = _req$body.user;
+      id_element = _req$body.id_element,
+      id_user = _req$body.id_user;
 
+  var element = 'post';
 
   _likes2.default.query({
-    where: { idElementLiked: idElementLiked, user: user }
+    where: { id_element: id_element, id_user: id_user }
   }).fetchAll().then(function (response) {
     if (response.length === 0) {
       _likes2.default.forge({
-        idElementLiked: idElementLiked,
-        user: user
+        id_element: id_element,
+        id_user: id_user,
+        element: element
       }).save().then(function () {
         return res.json({ success: true });
       });
@@ -40,20 +42,34 @@ router.post('/', function (req, res) {
 
 router.get('/', function (req, res) {
   _likes2.default.query({
-    select: ['id', 'idElementLiked', 'user']
+    select: ['id', 'id_element', 'id_user']
   }).fetchAll().then(function (likes) {
     res.json({ likes: likes });
   });
 });
 
+router.get('/popular', function (req, res) {
+  _likes2.default.query(function (q) {
+    q.innerJoin('posts', 'id_element', 'posts.id');
+    q.select('id_element', 'posts.title', 'posts.content');
+    q.count('id_element');
+    q.where('element', '=', 'post');
+    q.groupBy('id_element', 'posts.title', 'posts.content');
+    q.orderBy('count', 'desc');
+    q.limit(5);
+  }).fetchAll().then(function (data) {
+    res.json({ data: data });
+  });
+});
+
 router.delete('/deleted', function (req, res) {
   var _req$query = req.query,
-      idElementLiked = _req$query.idElementLiked,
-      user = _req$query.user;
+      id_element = _req$query.id_element,
+      id_user = _req$query.id_user;
 
 
   _likes2.default.query({
-    where: { idElementLiked: idElementLiked, user: user }
+    where: { id_element: id_element, id_user: id_user }
   }).destroy().then(function (like) {
     res.json({ like: like });
   });
