@@ -1,16 +1,25 @@
 import express from 'express'
 
 import Comment from '../models/comment'
+import Post from '../models/post'
+import Notification from '../models/notifications'
 
 let router = express.Router()
 
 export function deleteByPostId(id) {
-  return Comment.query({
-    where: { idPost: id }
-  }).destroy().then(() => {
-    return true
+  return new Promise((resolve) => {
+    Comment.query({
+      where: { idPost: id }
+    }).fetchAll().then((resp) => {
+      resolve(resp.map(i => i.id))
+      Comment.query({
+        where: { idPost: id }
+      }).destroy()
+        .then(() => {
+          return true
+        })
+    })
   })
-  .catch(err => false)
 }
 
 router.post('/', (req, res) => {
@@ -24,7 +33,36 @@ router.post('/', (req, res) => {
     idCategorie
   })
     .save()
-    .then(post => res.json({ success: true }))
+    .then((comment) => {
+      res.send({ comment })
+
+      // On recupère le username du createur du post
+      Post.query({
+        innerJoin: [ 'users', 'idUser', 'users.id' ],
+        select: [ 'users.username' ],
+        where: { 'posts.id': idPost }
+      }).fetch().then(user => {
+        const object = user.serialize()
+        const username = object.username
+        const id_element_notify = comment.id
+        const id_type = 1
+
+        // Lors de la création d'un commentaire,
+        // on crée une notification pour
+        // le createur du post
+        // puisse voir que quelqu'un a commenter
+        Notification.forge({
+          username,
+          id_element_notify,
+          id_type
+        }, { hasTimestamps: true })
+          .save()
+          .then(() => {
+            return true
+        })
+      })
+
+    })
     .catch(err => res.status(500).json({ error: err }))
 })
 
@@ -68,6 +106,11 @@ router.delete('/:id', (req, res) => {
     where: { id: req.params.id }
   }).destroy().then(post => {
     res.json({ post })
+    Notification.query({
+      where: { id_element_notify: req.params.id }
+    }).destroy().then(() => {
+      return true
+    })
   })
 })
 
@@ -76,6 +119,11 @@ router.delete('/postsDeleted/:idPost', (req, res) => {
     where: { idPost: req.params.idPost }
   }).destroy().then(post => {
     res.json({ post })
+    Notification.query({
+      where: { id_element_notify: req.params.id }
+    }).destroy().then(() => {
+      return true
+    })
   })
 })
 

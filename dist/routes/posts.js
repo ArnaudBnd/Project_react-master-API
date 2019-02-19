@@ -8,6 +8,10 @@ var _express = require('express');
 
 var _express2 = _interopRequireDefault(_express);
 
+var _notifications = require('../models/notifications');
+
+var _notifications2 = _interopRequireDefault(_notifications);
+
 var _post = require('../models/post');
 
 var _post2 = _interopRequireDefault(_post);
@@ -83,7 +87,14 @@ router.delete('/:id', function (req, res) {
   _post2.default.query({
     where: { id: req.params.id }
   }).destroy().then(function (post) {
-    (0, _comment.deleteByPostId)(req.params.id);
+    (0, _comment.deleteByPostId)(req.params.id).then(function (idsComs) {
+      // id a delete en notification
+      _notifications2.default.query(function (q) {
+        q.where('id_element_notify', 'in', idsComs);
+      }).destroy().then(function () {
+        return true;
+      });
+    });
     res.json({ post: post });
   }).catch(function (err) {
     return res.status(500).json({ error: err });

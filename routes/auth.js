@@ -46,30 +46,4 @@ router.post('/', (req, res) => {
   })
 })
 
-router.post('/facebookLogin', (req, res) => {
-  const { name, email } = req.body
-  const username = supressSpaceName(name)
-  const password_digest = ''
-
-  console.log('username: ', username)
-  console.log('email: ', email)
-
-  // je le connect
-  // sinon en dessous je crée
-
-  User.forge({
-    username, email, password_digest
-  }, { hasTimestamps: true }).save()
-    .then(user => {
-      // renvoyer un objet avec id, username, iat, exp
-      res.json({ success: true })
-    }).catch(err => {
-      if (err.detail) {
-        // renvoyer un objet avec id, username, iat, exp
-        res.json({ success: true })
-      }
-    })
-
-})
-
 export default router

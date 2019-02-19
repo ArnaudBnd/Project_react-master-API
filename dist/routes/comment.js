@@ -13,17 +13,32 @@ var _comment = require('../models/comment');
 
 var _comment2 = _interopRequireDefault(_comment);
 
+var _post = require('../models/post');
+
+var _post2 = _interopRequireDefault(_post);
+
+var _notifications = require('../models/notifications');
+
+var _notifications2 = _interopRequireDefault(_notifications);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var router = _express2.default.Router();
 
 function deleteByPostId(id) {
-  return _comment2.default.query({
-    where: { idPost: id }
-  }).destroy().then(function () {
-    return true;
-  }).catch(function (err) {
-    return false;
+  return new Promise(function (resolve) {
+    _comment2.default.query({
+      where: { idPost: id }
+    }).fetchAll().then(function (resp) {
+      resolve(resp.map(function (i) {
+        return i.id;
+      }));
+      _comment2.default.query({
+        where: { idPost: id }
+      }).destroy().then(function () {
+        return true;
+      });
+    });
   });
 }
 
@@ -42,8 +57,32 @@ router.post('/', function (req, res) {
     comment: comment,
     date: date,
     idCategorie: idCategorie
-  }).save().then(function (post) {
-    return res.json({ success: true });
+  }).save().then(function (comment) {
+    res.send({ comment: comment });
+
+    // On recupère le username du createur du post
+    _post2.default.query({
+      innerJoin: ['users', 'idUser', 'users.id'],
+      select: ['users.username'],
+      where: { 'posts.id': idPost }
+    }).fetch().then(function (user) {
+      var object = user.serialize();
+      var username = object.username;
+      var id_element_notify = comment.id;
+      var id_type = 1;
+
+      // Lors de la création d'un commentaire,
+      // on crée une notification pour
+      // le createur du post
+      // puisse voir que quelqu'un a commenter
+      _notifications2.default.forge({
+        username: username,
+        id_element_notify: id_element_notify,
+        id_type: id_type
+      }, { hasTimestamps: true }).save().then(function () {
+        return true;
+      });
+    });
   }).catch(function (err) {
     return res.status(500).json({ error: err });
   });
@@ -81,6 +120,7 @@ router.post('/update', function (req, res) {
     comment: req.body.comment
   }, { patch: true }).then(function (post) {
     res.json({ post: post });
+    // changer les notifs
   });
 });
 
@@ -89,6 +129,11 @@ router.delete('/:id', function (req, res) {
     where: { id: req.params.id }
   }).destroy().then(function (post) {
     res.json({ post: post });
+    _notifications2.default.query({
+      where: { id_element_notify: req.params.id }
+    }).destroy().then(function () {
+      return true;
+    });
   });
 });
 
@@ -97,6 +142,11 @@ router.delete('/postsDeleted/:idPost', function (req, res) {
     where: { idPost: req.params.idPost }
   }).destroy().then(function (post) {
     res.json({ post: post });
+    _notifications2.default.query({
+      where: { id_element_notify: req.params.id }
+    }).destroy().then(function () {
+      return true;
+    });
   });
 });
 

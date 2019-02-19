@@ -71,31 +71,4 @@ router.post('/', function (req, res) {
   });
 });
 
-router.post('/facebookLogin', function (req, res) {
-  var _req$body2 = req.body,
-      name = _req$body2.name,
-      email = _req$body2.email;
-
-  var username = supressSpaceName(name);
-  var password_digest = '';
-
-  console.log('username: ', username);
-  console.log('email: ', email);
-
-  // je le connect
-  // sinon en dessous je crée
-
-  _user2.default.forge({
-    username: username, email: email, password_digest: password_digest
-  }, { hasTimestamps: true }).save().then(function (user) {
-    // renvoyer un objet avec id, username, iat, exp
-    res.json({ success: true });
-  }).catch(function (err) {
-    if (err.detail) {
-      // renvoyer un objet avec id, username, iat, exp
-      res.json({ success: true });
-    }
-  });
-});
-
 exports.default = router;

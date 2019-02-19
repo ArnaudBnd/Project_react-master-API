@@ -1,5 +1,5 @@
 import express from 'express'
-
+import Notification from '../models/notifications'
 import Post from '../models/post'
 import { deleteByPostId } from './comment'
 
@@ -64,6 +64,15 @@ router.delete('/:id', (req, res) => {
   }).destroy()
     .then(post => {
       deleteByPostId(req.params.id)
+        .then((idsComs) => {
+          // idCom a delete en notification
+          // lorsque qu'un post est delete
+          Notification.query((q) => {
+            q.where('id_element_notify', 'in', idsComs)
+          }).destroy().then(() => {
+            return true
+          })
+      })
       res.json({ post })
     })
     .catch(err => res.status(500).json({ error: err }))

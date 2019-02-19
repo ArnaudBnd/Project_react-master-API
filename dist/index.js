@@ -32,6 +32,10 @@ var _disLikes = require('./routes/disLikes');
 
 var _disLikes2 = _interopRequireDefault(_disLikes);
 
+var _notifications = require('./routes/notifications');
+
+var _notifications2 = _interopRequireDefault(_notifications);
+
 var _auth = require('./routes/auth');
 
 var _auth2 = _interopRequireDefault(_auth);
@@ -75,6 +79,7 @@ app.use('/api/reset', _reset2.default);
 app.use('/api/send', _sendEmail2.default);
 app.use('/api/likes', _likes2.default);
 app.use('/api/disLikes', _disLikes2.default);
+app.use('/api/notifications', _notifications2.default);
 
 app.get('/*', function (req, res) {
   res.sendFile(_path2.default.join(__dirname, './index.html'));
