@@ -70,12 +70,14 @@ router.post('/', function (req, res) {
       var username = object.username;
       var id_element_notify = comment.id;
       var id_type = 1;
-      var tmp = socketUser.find(function (u) {
+      var tmp = global.socketUser.find(function (u) {
         return u.user == object.id;
       });
 
+      // Quand on a trouvé le user id qui est connecté
+      // et qui est l'auteur du post
+      // on lui envoie une notification
       if (tmp !== null) {
-        console.log('--> notification envoyé');
         tmp.socketSession.emit('userDataToNotify', {
           username: username,
           comment: comment,
@@ -84,10 +86,6 @@ router.post('/', function (req, res) {
         });
       }
 
-      // Lors de la création d'un commentaire,
-      // on crée une notification pour
-      // le createur du post
-      // puisse voir que quelqu'un a commenter
       _notifications2.default.forge({
         username: username,
         id_element_notify: id_element_notify,

@@ -43,18 +43,25 @@ const server = app.listen(3025, () => console.log('Running on localhost 3000'));
 
 global.io = socket(server);
 
+// variable temporel avec tout les users connectés
 global.socketUser = [];
 
+
+/*
+ * Chaque utilisateur ca sa propre connection
+ *
+ */
 global.io.on('connection', (socket) => {
 
-    // Réception du token du user connecté
+    /*
+     * Réception du token du user connecté
+     *
+     */
     socket.on('userLogged', ({ token }) => {
       try {
         const socketId  = socket.id;
         const { id, username } = jwt.decode(token);
 
-        // on stock dans le tableau les informations de l'utilisateur
-        // on associe un idUser a un socket id
         global.socketUser.push({
           user: id,
           socketId,
@@ -65,7 +72,14 @@ global.io.on('connection', (socket) => {
       }
     });
 
+    /*
+     * Quand un user se deconnect
+     * on le delete de socketUser
+     */
     socket.on('disconnect', () => {
+      // Lors de la deconnection
+      // on supprime l'id de socketUser
+      // pour garder que ceux qui sont connectés
       global.socketUser  = global.socketUser.filter(s => s.socketId !== socket.id);
     });
 });
