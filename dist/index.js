@@ -60,9 +60,14 @@ var _cors = require('cors');
 
 var _cors2 = _interopRequireDefault(_cors);
 
+var _jsonwebtoken = require('jsonwebtoken');
+
+var _jsonwebtoken2 = _interopRequireDefault(_jsonwebtoken);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var app = (0, _express2.default)();
+var socket = require('socket.io');
 
 app.use(_bodyParser2.default.json());
 // Permet de faire des requêtes sur differentes urls
@@ -85,6 +90,44 @@ app.get('/*', function (req, res) {
   res.sendFile(_path2.default.join(__dirname, './index.html'));
 });
 
-app.listen(3025, function () {
+var server = app.listen(3025, function () {
   return console.log('Running on localhost 3000');
+});
+
+global.io = socket(server);
+
+global.socketUser = [];
+
+global.io.on('connection', function (socket) {
+
+  // Réception du token du user connecté
+  socket.on('userLogged', function (_ref) {
+    var token = _ref.token;
+
+    try {
+      var socketId = socket.id;
+
+      var _jwt$decode = _jsonwebtoken2.default.decode(token),
+          id = _jwt$decode.id,
+          username = _jwt$decode.username;
+
+      // on stock dans le tableau les informations de l'utilisateur
+      // on associe un idUser a un socket id
+
+
+      global.socketUser.push({
+        user: id,
+        socketId: socketId,
+        socketSession: socket
+      });
+    } catch (e) {
+      // Si y'a une erreur de jwt
+    }
+  });
+
+  socket.on('disconnect', function () {
+    global.socketUser = global.socketUser.filter(function (s) {
+      return s.socketId !== socket.id;
+    });
+  });
 });

@@ -88,7 +88,8 @@ router.delete('/:id', function (req, res) {
     where: { id: req.params.id }
   }).destroy().then(function (post) {
     (0, _comment.deleteByPostId)(req.params.id).then(function (idsComs) {
-      // id a delete en notification
+      // idCom a delete en notification
+      // lorsque qu'un post est delete
       _notifications2.default.query(function (q) {
         q.where('id_element_notify', 'in', idsComs);
       }).destroy().then(function () {

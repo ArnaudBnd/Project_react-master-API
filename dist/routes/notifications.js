@@ -16,6 +16,10 @@ var _comment = require('../models/comment');
 
 var _comment2 = _interopRequireDefault(_comment);
 
+var _post = require('../models/post');
+
+var _post2 = _interopRequireDefault(_post);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var router = _express2.default.Router();
@@ -40,6 +44,26 @@ router.get('/:username', function (req, res) {
       var com = resp.serialize();
       res.json({ com: com });
     });
+  });
+});
+
+router.get('/notify/:idPost', function (req, res) {
+  // On recupère le username du createur du post
+  _post2.default.query({
+    innerJoin: ['users', 'idUser', 'users.id'],
+    select: ['users.username', 'users.id'],
+    where: { 'posts.id': req.params.idPost }
+  }).fetch().then(function (user) {
+    var object = user.serialize();
+    var username = object.username;
+    var idUser = object.id;
+    console.log(idUser);
+    console.log(username);
+    var dataUser = {
+      idUser: idUser,
+      username: username
+    };
+    res.json({ dataUser: dataUser });
   });
 });
 

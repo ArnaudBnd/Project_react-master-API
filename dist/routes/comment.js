@@ -63,13 +63,26 @@ router.post('/', function (req, res) {
     // On recupère le username du createur du post
     _post2.default.query({
       innerJoin: ['users', 'idUser', 'users.id'],
-      select: ['users.username'],
+      select: ['users.username', 'users.id'],
       where: { 'posts.id': idPost }
     }).fetch().then(function (user) {
       var object = user.serialize();
       var username = object.username;
       var id_element_notify = comment.id;
       var id_type = 1;
+      var tmp = socketUser.find(function (u) {
+        return u.user == object.id;
+      });
+
+      if (tmp !== null) {
+        console.log('--> notification envoyé');
+        tmp.socketSession.emit('userDataToNotify', {
+          username: username,
+          comment: comment,
+          date: date,
+          user: user
+        });
+      }
 
       // Lors de la création d'un commentaire,
       // on crée une notification pour
@@ -120,7 +133,6 @@ router.post('/update', function (req, res) {
     comment: req.body.comment
   }, { patch: true }).then(function (post) {
     res.json({ post: post });
-    // changer les notifs
   });
 });
 

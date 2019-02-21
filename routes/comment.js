@@ -39,13 +39,24 @@ router.post('/', (req, res) => {
       // On recupère le username du createur du post
       Post.query({
         innerJoin: [ 'users', 'idUser', 'users.id' ],
-        select: [ 'users.username' ],
+        select: [ 'users.username', 'users.id' ],
         where: { 'posts.id': idPost }
       }).fetch().then(user => {
         const object = user.serialize()
         const username = object.username
         const id_element_notify = comment.id
         const id_type = 1
+        const tmp = socketUser.find(u => u.user == object.id)
+
+        if (tmp !== null) {
+          console.log('--> notification envoyé')
+          tmp.socketSession.emit('userDataToNotify', {
+            username,
+            comment,
+            date,
+            user
+          })
+        }
 
         // Lors de la création d'un commentaire,
         // on crée une notification pour

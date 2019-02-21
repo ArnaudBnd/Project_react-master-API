@@ -1,6 +1,7 @@
 import express from 'express'
 import Notification from '../models/notifications'
 import Comment from '../models/comment'
+import Post from '../models/post'
 
 let router = express.Router()
 
@@ -24,6 +25,26 @@ router.get('/:username', (req, res) => {
       const com = resp.serialize()
       res.json({ com })
     })
+  })
+})
+
+router.get('/notify/:idPost', (req, res) => {
+  // On recupère le username du createur du post
+  Post.query({
+    innerJoin: [ 'users', 'idUser', 'users.id' ],
+    select: [ 'users.username', 'users.id' ],
+    where: { 'posts.id': req.params.idPost }
+  }).fetch().then(user => {
+    const object = user.serialize()
+    const username = object.username
+    const idUser = object.id
+    console.log(idUser)
+    console.log(username)
+    const dataUser = {
+      idUser,
+      username
+    }
+    res.json({ dataUser })
   })
 })
 

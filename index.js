@@ -12,9 +12,11 @@ import posts from './routes/posts';
 import comments from './routes/comment';
 import profils from './routes/profils';
 import bodyParser from 'body-parser';
-import cors from 'cors'
+import cors from 'cors';
+import jwt from 'jsonwebtoken'
 
 let app = express();
+let socket = require('socket.io');
 
 app.use(bodyParser.json());
 // Permet de faire des requêtes sur differentes urls
@@ -37,4 +39,33 @@ app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, './index.html'));
 });
 
-app.listen(3025, () => console.log('Running on localhost 3000'));
+const server = app.listen(3025, () => console.log('Running on localhost 3000'));
+
+global.io = socket(server);
+
+global.socketUser = [];
+
+global.io.on('connection', (socket) => {
+
+    // Réception du token du user connecté
+    socket.on('userLogged', ({ token }) => {
+      try {
+        const socketId  = socket.id;
+        const { id, username } = jwt.decode(token);
+
+        // on stock dans le tableau les informations de l'utilisateur
+        // on associe un idUser a un socket id
+        global.socketUser.push({
+          user: id,
+          socketId,
+          socketSession: socket
+        })
+      } catch (e) {
+        // Si y'a une erreur de jwt
+      }
+    });
+
+    socket.on('disconnect', () => {
+      global.socketUser  = global.socketUser.filter(s => s.socketId !== socket.id);
+    });
+});
