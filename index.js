@@ -61,6 +61,7 @@ global.io.on('connection', (socket) => {
       try {
         const socketId  = socket.id;
         const { id, username } = jwt.decode(token);
+        console.log('userLogged > ', id);
 
         global.socketUser.push({
           user: id,

@@ -35,6 +35,8 @@ router.post('/', (req, res) => {
     .save()
     .then((comment) => {
       res.send({ comment })
+      const commentToSend = comment.serialize()
+      commentToSend.read = false
 
       // On recupère le username du createur du post
       Post.query({
@@ -47,28 +49,34 @@ router.post('/', (req, res) => {
         const id_element_notify = comment.id
         const id_type = 1
         const tmp = global.socketUser.find(u => u.user == object.id)
+        console.log(global.socketUser)
+        console.log(tmp)
+        console.log(object.id)
 
-        // Quand on a trouvé le user id qui est connecté
-        // et qui est l'auteur du post
-        // on lui envoie une notification
-        if (tmp !== null) {
-          tmp.socketSession.emit('userDataToNotify', {
-            username,
-            comment,
-            date,
-            user
-          })
-        }
+        const read = false
+
+        console.log('user', username, id_element_notify, id_type, read)
 
         Notification.forge({
           username,
           id_element_notify,
-          id_type
+          id_type,
+          read
         }, { hasTimestamps: true })
           .save()
           .then(() => {
+            console.log('here')
             return true
         })
+        // Quand on a trouvé le user id qui est connecté
+        // et qui est l'auteur du post
+        // on lui envoie une notification
+        if (tmp) {
+          tmp.socketSession.emit('userDataToNotify', {
+            commentToSend,
+            user
+          })
+        }
       })
 
     })

@@ -20,7 +20,9 @@ router.get('/:username', (req, res) => {
 
     // get coms with id_element_notify
     Comment.query((q) => {
-      q.where('id', 'in', tabl)
+      q.innerJoin('notifications', 'comments.id', 'notifications.id_element_notify'),
+      q.where('comments.id', 'in', tabl),
+      q.select('notifications.read', 'comment', 'user', 'date', 'idPost')
     }).orderBy('date', 'asc').fetchAll().then((resp) => {
       const com = resp.serialize()
       res.json({ com })
@@ -38,8 +40,6 @@ router.get('/notify/:idPost', (req, res) => {
     const object = user.serialize()
     const username = object.username
     const idUser = object.id
-    console.log(idUser)
-    console.log(username)
     const dataUser = {
       idUser,
       username

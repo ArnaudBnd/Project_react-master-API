@@ -39,7 +39,7 @@ router.get('/:username', function (req, res) {
 
     // get coms with id_element_notify
     _comment2.default.query(function (q) {
-      q.where('id', 'in', tabl);
+      q.innerJoin('notifications', 'comments.id', 'notifications.id_element_notify'), q.where('comments.id', 'in', tabl), q.select('notifications.read', 'comment', 'user', 'date', 'idPost');
     }).orderBy('date', 'asc').fetchAll().then(function (resp) {
       var com = resp.serialize();
       res.json({ com: com });
@@ -57,8 +57,6 @@ router.get('/notify/:idPost', function (req, res) {
     var object = user.serialize();
     var username = object.username;
     var idUser = object.id;
-    console.log(idUser);
-    console.log(username);
     var dataUser = {
       idUser: idUser,
       username: username
