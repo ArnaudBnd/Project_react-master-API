@@ -22,7 +22,7 @@ router.get('/:username', (req, res) => {
     Comment.query((q) => {
       q.innerJoin('notifications', 'comments.id', 'notifications.id_element_notify'),
       q.where('comments.id', 'in', tabl),
-      q.select('notifications.read', 'comment', 'user', 'date', 'idPost')
+      q.select('notifications.read', 'notifications.id_element_notify', 'comment', 'user', 'date', 'idPost')
     }).orderBy('date', 'asc').fetchAll().then((resp) => {
       const com = resp.serialize()
       res.json({ com })
@@ -45,6 +45,16 @@ router.get('/notify/:idPost', (req, res) => {
       username
     }
     res.json({ dataUser })
+  })
+})
+
+router.post('/update', (req, res) => {
+  Notification.where({
+    id_element_notify: req.body.id_element_notify
+  }).save({
+    read: true
+  }, {patch:true}).then((notification) => {
+    res.json({ notification })
   })
 })
 

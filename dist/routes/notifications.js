@@ -39,7 +39,7 @@ router.get('/:username', function (req, res) {
 
     // get coms with id_element_notify
     _comment2.default.query(function (q) {
-      q.innerJoin('notifications', 'comments.id', 'notifications.id_element_notify'), q.where('comments.id', 'in', tabl), q.select('notifications.read', 'comment', 'user', 'date', 'idPost');
+      q.innerJoin('notifications', 'comments.id', 'notifications.id_element_notify'), q.where('comments.id', 'in', tabl), q.select('notifications.read', 'notifications.id_element_notify', 'comment', 'user', 'date', 'idPost');
     }).orderBy('date', 'asc').fetchAll().then(function (resp) {
       var com = resp.serialize();
       res.json({ com: com });
@@ -62,6 +62,16 @@ router.get('/notify/:idPost', function (req, res) {
       username: username
     };
     res.json({ dataUser: dataUser });
+  });
+});
+
+router.post('/update', function (req, res) {
+  _notifications2.default.where({
+    id_element_notify: req.body.id_element_notify
+  }).save({
+    read: true
+  }, { patch: true }).then(function (notification) {
+    res.json({ notification: notification });
   });
 });
 

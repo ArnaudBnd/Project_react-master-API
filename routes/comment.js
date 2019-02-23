@@ -37,6 +37,7 @@ router.post('/', (req, res) => {
       res.send({ comment })
       const commentToSend = comment.serialize()
       commentToSend.read = false
+      commentToSend.id_element_notify = commentToSend.id
 
       // On recupère le username du createur du post
       Post.query({
@@ -49,13 +50,8 @@ router.post('/', (req, res) => {
         const id_element_notify = comment.id
         const id_type = 1
         const tmp = global.socketUser.find(u => u.user == object.id)
-        console.log(global.socketUser)
-        console.log(tmp)
-        console.log(object.id)
 
         const read = false
-
-        console.log('user', username, id_element_notify, id_type, read)
 
         Notification.forge({
           username,
@@ -65,7 +61,6 @@ router.post('/', (req, res) => {
         }, { hasTimestamps: true })
           .save()
           .then(() => {
-            console.log('here')
             return true
         })
         // Quand on a trouvé le user id qui est connecté

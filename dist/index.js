@@ -119,8 +119,6 @@ global.io.on('connection', function (socket) {
           id = _jwt$decode.id,
           username = _jwt$decode.username;
 
-      console.log('userLogged > ', id);
-
       global.socketUser.push({
         user: id,
         socketId: socketId,
