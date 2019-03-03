@@ -19,6 +19,19 @@ router.post('/', (req, res) => {
     .catch(err => res.status(500).json({ error: err }))
 })
 
+router.post('/update', (req, res) => {
+  Post.where({
+    id: req.body.idPostToUpdate
+  }).save({
+    id: req.body.idPostToUpdate,
+    title: req.body.title,
+    content: req.body.content
+  }, {patch:true}).then((post) => {
+    res.json({ post })
+  })
+  .catch(err => res.status(500).json({ error: err }))
+})
+
 router.get('/', (req, res) => {
   Post.query({
     innerJoin: [ 'users', 'idUser', 'users.id' ],
@@ -76,19 +89,6 @@ router.delete('/:id', (req, res) => {
       res.json({ post })
     })
     .catch(err => res.status(500).json({ error: err }))
-})
-
-router.post('/update', (req, res) => {
-  Post.where({
-    id: req.body.idPostToUpdate
-  }).save({
-    id: req.body.idPostToUpdate,
-    title: req.body.title,
-    content: req.body.content
-  }, {patch:true}).then((post) => {
-    res.json({ post })
-  })
-  .catch(err => res.status(500).json({ error: err }))
 })
 
 export default router

@@ -58,4 +58,13 @@ router.post('/update', (req, res) => {
   })
 })
 
+router.delete('/:id_element_notify', (req, res) => {
+  Notification.query({
+    where: { id_element_notify: req.params.id_element_notify }
+  }).destroy()
+    .then((notif) => {
+      res.json({ notif })
+    })
+})
+
 export default router

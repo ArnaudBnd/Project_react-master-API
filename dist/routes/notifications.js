@@ -75,4 +75,12 @@ router.post('/update', function (req, res) {
   });
 });
 
+router.delete('/:id_element_notify', function (req, res) {
+  _notifications2.default.query({
+    where: { id_element_notify: req.params.id_element_notify }
+  }).destroy().then(function (notif) {
+    res.json({ notif: notif });
+  });
+});
+
 exports.default = router;

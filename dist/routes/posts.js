@@ -42,6 +42,20 @@ router.post('/', function (req, res) {
   });
 });
 
+router.post('/update', function (req, res) {
+  _post2.default.where({
+    id: req.body.idPostToUpdate
+  }).save({
+    id: req.body.idPostToUpdate,
+    title: req.body.title,
+    content: req.body.content
+  }, { patch: true }).then(function (post) {
+    res.json({ post: post });
+  }).catch(function (err) {
+    return res.status(500).json({ error: err });
+  });
+});
+
 router.get('/', function (req, res) {
   _post2.default.query({
     innerJoin: ['users', 'idUser', 'users.id'],
@@ -96,20 +110,6 @@ router.delete('/:id', function (req, res) {
         return true;
       });
     });
-    res.json({ post: post });
-  }).catch(function (err) {
-    return res.status(500).json({ error: err });
-  });
-});
-
-router.post('/update', function (req, res) {
-  _post2.default.where({
-    id: req.body.idPostToUpdate
-  }).save({
-    id: req.body.idPostToUpdate,
-    title: req.body.title,
-    content: req.body.content
-  }, { patch: true }).then(function (post) {
     res.json({ post: post });
   }).catch(function (err) {
     return res.status(500).json({ error: err });
