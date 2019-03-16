@@ -61,7 +61,7 @@ router.get('/', function (req, res) {
     innerJoin: ['users', 'idUser', 'users.id'],
     select: ['users.username', 'title', 'content', 'posts.created_at', 'posts.id', 'idCategorie'],
     where: { idCategorie: 2 }
-  }).fetchAll().then(function (post) {
+  }).orderBy('created_at', 'desc').fetchAll().then(function (post) {
     res.json({ post: post });
   }).catch(function (err) {
     return res.status(500).json({ error: err });

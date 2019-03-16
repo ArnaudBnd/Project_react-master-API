@@ -46,9 +46,8 @@ global.io = socket(server);
 // variable temporel avec tout les users connectés
 global.socketUser = [];
 
-
 /*
- * Chaque utilisateur ca sa propre connection
+ * Chaque utilisateur qui se connect
  *
  */
 global.io.on('connection', (socket) => {
@@ -62,6 +61,7 @@ global.io.on('connection', (socket) => {
         const socketId  = socket.id;
         const { id, username } = jwt.decode(token);
 
+        // On associe à un id user, une socket id et une socketSession
         global.socketUser.push({
           user: id,
           socketId,
@@ -69,6 +69,7 @@ global.io.on('connection', (socket) => {
         })
       } catch (e) {
         // Si y'a une erreur de jwt
+        console.log('erreur socket event userLogged: ', e)
       }
     });
 

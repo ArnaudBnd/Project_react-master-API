@@ -100,7 +100,7 @@ global.io = socket(server);
 global.socketUser = [];
 
 /*
- * Chaque utilisateur ca sa propre connection
+ * Chaque utilisateur qui se connect
  *
  */
 global.io.on('connection', function (socket) {
@@ -119,6 +119,9 @@ global.io.on('connection', function (socket) {
           id = _jwt$decode.id,
           username = _jwt$decode.username;
 
+      // On associe à un id user, une socket id et une socketSession
+
+
       global.socketUser.push({
         user: id,
         socketId: socketId,
@@ -126,6 +129,7 @@ global.io.on('connection', function (socket) {
       });
     } catch (e) {
       // Si y'a une erreur de jwt
+      console.log('erreur socket event userLogged: ', e);
     }
   });
 
@@ -134,6 +138,8 @@ global.io.on('connection', function (socket) {
    * on le delete de socketUser
    */
   socket.on('disconnect', function () {
+    console.log('socket =>', socket.id);
+    console.log('global.socketUser =>', global.socketUser);
     // Lors de la deconnection
     // on supprime l'id de socketUser
     // pour garder que ceux qui sont connectés
