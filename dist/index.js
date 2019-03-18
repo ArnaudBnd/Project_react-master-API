@@ -138,8 +138,6 @@ global.io.on('connection', function (socket) {
    * on le delete de socketUser
    */
   socket.on('disconnect', function () {
-    console.log('socket =>', socket.id);
-    console.log('global.socketUser =>', global.socketUser);
     // Lors de la deconnection
     // on supprime l'id de socketUser
     // pour garder que ceux qui sont connectés

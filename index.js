@@ -13,7 +13,7 @@ import comments from './routes/comment';
 import profils from './routes/profils';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 
 let app = express();
 let socket = require('socket.io');
@@ -39,7 +39,7 @@ app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, './index.html'));
 });
 
-const server = app.listen(3025, () => console.log('Running on localhost 3000'));
+const server = app.listen(3025, () => console.log('Running on localhost 3025'));
 
 global.io = socket(server);
 
