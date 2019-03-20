@@ -14,6 +14,8 @@ router.post('/', (req, res) => {
     where: { email: req.body.email },
   }).fetch().then(user => {
     if (user) {
+      const userSerialize = user.serialize()
+
       // Create token for user connect
       const token = jwt.sign({
         id: user.get('id'),
@@ -38,8 +40,8 @@ router.post('/', (req, res) => {
 
       const mailOptions = {
         from: 'projetreactemail@gmail.fr',
-        to: 'arnaudbenede@hotmail.fr',
-        subject: 'TEST PASSWORD',
+        to: userSerialize.email,
+        subject: 'RESET PASSWORD',
         html: '<p>Veullez cliquer sur le lien ci-dessus pour changer votre adresse mail</p>'
         + `http://localhost:3006/reset/${token}`
       }

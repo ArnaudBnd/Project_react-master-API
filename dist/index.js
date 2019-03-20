@@ -91,7 +91,7 @@ app.get('/*', function (req, res) {
 });
 
 var server = app.listen(3025, function () {
-  return console.log('Running on localhost 3000');
+  return console.log('Running on localhost 3025');
 });
 
 global.io = socket(server);

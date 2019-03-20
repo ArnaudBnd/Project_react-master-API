@@ -35,6 +35,9 @@ router.post('/', function (req, res) {
     where: { email: req.body.email }
   }).fetch().then(function (user) {
     if (user) {
+      var userSerialize = user.serialize();
+
+      console.log('email: ', userSerialize.email);
       // Create token for user connect
       var token = _jsonwebtoken2.default.sign({
         id: user.get('id'),
@@ -59,7 +62,7 @@ router.post('/', function (req, res) {
 
       var mailOptions = {
         from: 'projetreactemail@gmail.fr',
-        to: 'arnaudbenede@hotmail.fr',
+        to: userSerialize.email,
         subject: 'TEST PASSWORD',
         html: '<p>Veullez cliquer sur le lien ci-dessus pour changer votre adresse mail</p>' + ('http://localhost:3006/reset/' + token)
       };
